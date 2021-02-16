@@ -1,0 +1,205 @@
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:minHeight="250dp">
+
+    <AutoCompleteTextView
+        android:id="@+id/txt_input_azul"
+        android:layout_width="128dp"
+        android:layout_height="71dp"
+
+        android:layout_marginTop="428dp"
+        android:hint="CANTIDAD PAQUETES"
+        android:inputType="number"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.943"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <AutoCompleteTextView
+        android:id="@+id/txt_input_verde"
+        android:layout_width="128dp"
+        android:layout_height="71dp"
+
+        android:layout_marginTop="428dp"
+        android:hint="CANTIDAD PAQUETES"
+        android:inputType="number"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.056"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btn_registrar"
+        android:layout_width="363dp"
+        android:layout_height="67dp"
+        android:layout_marginTop="528dp"
+        android:drawableLeft="@drawable/ic_action_registrar"
+        android:onClick="registrar"
+        android:text="@string/registrar"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.44"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/txt_fecha_maples"
+        android:layout_width="192dp"
+        android:layout_height="65dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="8dp"
+        android:ems="10"
+        android:hint="INGRESAR FECHA"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
+
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="192dp"
+        android:layout_height="31dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="266dp"
+        android:fontFamily="monospace"
+        android:text="AYUDANTE"
+        android:textAlignment="viewStart"
+        android:textSize="19sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
+
+
+    <TextView
+        android:layout_width="118dp"
+        android:layout_height="28dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="104dp"
+        android:fontFamily="monospace"
+        android:text="CLIENTE"
+        android:textAlignment="viewStart"
+        android:textSize="19sp"
+        android:textStyle="bold"
+        android:typeface="normal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="192dp"
+        android:layout_height="31dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="180dp"
+        android:fontFamily="monospace"
+        android:text="REPARTIDOR"
+        android:textAlignment="viewStart"
+        android:textSize="19sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
+
+
+    <TextView
+        android:id="@+id/txt_tipo_verde"
+        android:layout_width="128dp"
+        android:layout_height="49dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="380dp"
+        android:text="0"
+        android:textAlignment="center"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txt_tipo_azul"
+        android:layout_width="128dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="380dp"
+        android:layout_marginEnd="16dp"
+        android:text="0"
+        android:textAlignment="center"
+        android:textColor="@android:color/holo_blue_dark"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.toptoche.searchablespinnerlibrary.SearchableSpinner
+        android:id="@+id/spinner_ayudante"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:layout_marginTop="290dp"
+
+        android:layout_marginEnd="8dp"
+        android:backgroundTint="@android:color/background_dark"
+        app:hintText="SELECCIONAR AYUDANTE"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.toptoche.searchablespinnerlibrary.SearchableSpinner
+
+        android:id="@+id/spinner_cliente"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="132dp"
+
+        android:layout_marginEnd="8dp"
+        android:accessibilityHeading="true"
+        android:backgroundTint="@android:color/background_dark"
+        android:dropDownWidth="match_parent"
+        android:theme="@style/AppTheme"
+        app:hintText="SELECCIONAR CLIENTE"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:backgroundTint="@android:color/background_dark" />
+
+    <com.toptoche.searchablespinnerlibrary.SearchableSpinner
+        android:id="@+id/spinner_repartidor"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:layout_marginTop="200dp"
+
+        android:layout_marginEnd="8dp"
+        android:backgroundTint="@android:color/background_dark"
+        app:hintText="SELECCIONAR REPARTIDOR"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="174dp"
+        android:layout_height="68dp"
+        android:layout_marginTop="32dp"
+        android:text="FECHA"
+        android:onClick="buscar_fecha"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.4"
+        app:layout_constraintStart_toEndOf="@+id/txt_fecha_maples"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</android.support.constraint.ConstraintLayout>

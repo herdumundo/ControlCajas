@@ -1,0 +1,242 @@
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:minHeight="250dp">
+
+    <AutoCompleteTextView
+        android:id="@+id/txt_cod_caja"
+        android:layout_width="383dp"
+        android:layout_height="63dp"
+
+        android:layout_marginTop="408dp"
+        android:hint="@string/prompt_CANT"
+        android:inputType="number"
+        android:maxLines="1"
+        android:singleLine="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.571"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btn_cargar"
+        android:layout_width="164dp"
+        android:layout_height="46dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="474dp"
+        android:drawableLeft="@drawable/ic_action_agregar"
+        android:onClick="agregar_fila"
+        android:text="CARGAR"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btn_registrar"
+        android:layout_width="166dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="474dp"
+        android:drawableLeft="@drawable/ic_action_registrar"
+        android:onClick="registrar"
+        android:text="@string/registrar"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/txt_fecha_maples"
+        android:layout_width="211dp"
+        android:layout_height="69dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="8dp"
+        android:ems="10"
+        android:hint="INGRESAR FECHA"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
+
+
+    <ListView
+        android:id="@+id/listView_cajas"
+        android:layout_width="380dp"
+        android:layout_height="192dp"
+        android:layout_marginTop="532dp"
+        android:background="@color/colorPrimary"
+        android:backgroundTint="@color/colorAccent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="356dp"
+        android:text="TIPO 4"
+        android:textColor="#FFC107"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.089"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/txt_tipo_4"
+        android:layout_width="55dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="380dp"
+        android:text="0"
+        android:textAlignment="center"
+        android:textColor="@color/colorBlack"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.089"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/txt_tipo_5"
+        android:layout_width="72dp"
+        android:layout_height="21dp"
+        android:layout_marginTop="380dp"
+        android:text="0"
+        android:textAlignment="center"
+        android:textColor="@android:color/background_dark"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.867"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="73dp"
+        android:layout_height="23dp"
+        android:layout_marginTop="356dp"
+        android:layout_marginEnd="44dp"
+        android:text="TIPO 5"
+        android:textColor="@android:color/holo_red_dark"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="192dp"
+        android:layout_height="31dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="266dp"
+        android:fontFamily="monospace"
+        android:text="AYUDANTE"
+        android:textAlignment="viewStart"
+        android:textSize="19sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
+
+
+    <TextView
+        android:layout_width="118dp"
+        android:layout_height="28dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="104dp"
+        android:fontFamily="monospace"
+        android:text="CLIENTE"
+        android:textAlignment="viewStart"
+        android:textSize="19sp"
+        android:textStyle="bold"
+        android:typeface="normal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="192dp"
+        android:layout_height="31dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="180dp"
+        android:fontFamily="monospace"
+        android:text="REPARTIDOR"
+        android:textAlignment="viewStart"
+        android:textSize="19sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
+
+
+    <com.toptoche.searchablespinnerlibrary.SearchableSpinner
+        android:id="@+id/spinner_ayudante"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:layout_marginTop="290dp"
+
+        android:layout_marginEnd="8dp"
+        android:backgroundTint="@android:color/background_dark"
+        app:hintText="SELECCIONAR AYUDANTE"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.toptoche.searchablespinnerlibrary.SearchableSpinner
+
+        android:id="@+id/spinner_cliente"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="132dp"
+
+        android:layout_marginEnd="8dp"
+        android:accessibilityHeading="true"
+        android:backgroundTint="@android:color/background_dark"
+        android:dropDownWidth="match_parent"
+        android:theme="@style/AppTheme"
+        app:hintText="SELECCIONAR CLIENTE"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:backgroundTint="@android:color/background_dark" />
+
+    <com.toptoche.searchablespinnerlibrary.SearchableSpinner
+        android:id="@+id/spinner_repartidor"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:layout_marginTop="200dp"
+
+        android:layout_marginEnd="8dp"
+        android:backgroundTint="@android:color/background_dark"
+        app:hintText="SELECCIONAR REPARTIDOR"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="153dp"
+        android:layout_height="72dp"
+        android:layout_marginTop="28dp"
+        android:text="FECHA"
+        android:onClick="buscar_fecha_cajas"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/txt_fecha_maples"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</android.support.constraint.ConstraintLayout>

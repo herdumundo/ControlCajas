@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:text="REGISTRO DE CLIENTES"
+        android:textSize="25sp"
+        android:textStyle="bold" />
+
+
+    <EditText
+        android:id="@+id/txt_razon_social"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="RAZON SOCIAL" />
+
+    <EditText
+        android:id="@+id/txt_ruc_ci"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="RUC / CI" />
+
+    <Button
+        android:id="@+id/btnRegistro"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_marginTop="30dp"
+        android:baselineAligned="false"
+        android:onClick="onClick"
+        android:text="REGISTRAR CLIENTE" />
+
+
+</LinearLayout>
