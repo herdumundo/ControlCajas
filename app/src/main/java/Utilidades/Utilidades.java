@@ -21,10 +21,11 @@ public class Utilidades {
             " cod_tipo INTEGER, cod_barra TEXT, estado TEXT  )";
 
 
-    public static final String CREAR_TABLA_MOVIMIENTOS="CREATE TABLE " + TABLA_MOVIMIENTOS+" (nro_movimiento INTEGER PRIMARY KEY, " +
+    public static final String CREAR_TABLA_MOVIMIENTOS="CREATE TABLE " + TABLA_MOVIMIENTOS+" (nro_movimiento INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "fecha TEXT, repartidor INTEGER, tipo_mov INTEGER, cod_cliente INTEGER, sucursal TEXT, ayudante INTEGER,estado TEXT )";
 
-    public static final String CREAR_TABLA_CABECERA_MAPLES="CREATE TABLE mov_maples (nro_movimiento INTEGER PRIMARY KEY, " +
+
+    public static final String CREAR_TABLA_CABECERA_MAPLES="CREATE TABLE mov_maples (nro_movimiento INTEGER PRIMARY KEY AUTOINCREMENT, " +
             "fecha TEXT, repartidor INTEGER, tipo_mov INTEGER, cod_cliente INTEGER, sucursal TEXT, ayudante INTEGER,estado TEXT )";
 
     public static final String CREAR_TABLA_DET_MOVIMIENTOS="CREATE TABLE " + TABLA_DET_MOVIMIENTOS+" (nro_movimiento INTEGER, " +

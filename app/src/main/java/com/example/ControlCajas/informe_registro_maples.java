@@ -1,12 +1,7 @@
 package com.example.ControlCajas;
-
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
-import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -17,24 +12,19 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-
- import entidades.informe_maples;
-import entidades.Usuario;
+import Utilidades.CRUD;
+import entidades.informe_maples;
 
 public class informe_registro_maples extends AppCompatActivity {
     TextView txt_fecha;
     Button btn_fecha;
     DatePickerDialog picker;
-    Connection connect;
     ArrayList<informe_maples> lista_maples;
     private ArrayList<String> lista;
     private  ListView ListView;
@@ -113,10 +103,9 @@ public class informe_registro_maples extends AppCompatActivity {
 
         try {
 
-            ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
-            connect = conexion.Connections();
+            CRUD.connect = CRUD.conexion.Connections();
             String query =  "exec pa_select_maples_registrados @fecha='"+txt_fecha.getText().toString()+"'" ;
-            Statement stmt = connect.createStatement();
+            Statement stmt = CRUD.connect.createStatement();
             ResultSet rs = stmt.executeQuery(query);
             informe_maples informe_maples= null;
             lista_maples=new ArrayList<informe_maples>();

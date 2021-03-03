@@ -21,6 +21,8 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import Utilidades.CRUD;
 import entidades.contenedor_tipo_envio;
 
 import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
@@ -37,8 +39,7 @@ import entidades.Repartidores;
 public class recepcion_maples extends AppCompatActivity
 {
     TextView txt_tipo_verde,txt_tipo_azul,txt_input_azul,txt_input_verde;
-    ConexionSQLiteHelper conn;
-    private ProgressDialog progress;
+     private ProgressDialog progress;
       DatePickerDialog picker;
     EditText txt_fecha;
     SearchableSpinner spinner_cliente,spinner_repartidor,spinner_ayudante;
@@ -69,7 +70,7 @@ public class recepcion_maples extends AppCompatActivity
         txt_input_azul=(TextView) findViewById(R.id.txt_input_azul);
         txt_input_verde=(TextView) findViewById(R.id.txt_input_verde);
         txt_fecha.setEnabled(false);
-        conn=new ConexionSQLiteHelper(getApplicationContext(),"bd_usuarios",null,1);
+        CRUD.conexion_sqlite(this);
         cargar_cliente();
         cargar_repartidor();
         spinner_cliente.setTitle("SELECCIONAR CLIENTE");
@@ -78,7 +79,7 @@ public class recepcion_maples extends AppCompatActivity
         spinner_repartidor.setPositiveButton("CERRAR");
         spinner_ayudante.setTitle("SELECCIONAR AYUDANTE");
         spinner_ayudante.setPositiveButton("CERRAR");
-        SQLiteDatabase db=conn.getReadableDatabase();
+        SQLiteDatabase db=CRUD.conn.getReadableDatabase();
         Cursor cursor1=db.rawQuery("SELECT date('now') as fecha",null);
         while (cursor1.moveToNext())
         {
@@ -202,7 +203,7 @@ public class recepcion_maples extends AppCompatActivity
     private  void cargar_cliente()
     {
         List<Clientes> lista_combo = new ArrayList<>();
-        SQLiteDatabase db=conn.getReadableDatabase();
+        SQLiteDatabase db=CRUD.conn.getReadableDatabase();
         Cursor cursor=db.rawQuery("SELECT * FROM clientes "   ,null);
         while (cursor.moveToNext())
         {
@@ -220,7 +221,7 @@ public class recepcion_maples extends AppCompatActivity
     private  void cargar_repartidor()
     {
         List<Repartidores> lista_combo_repartidor = new ArrayList<>();
-        SQLiteDatabase db=conn.getReadableDatabase();
+        SQLiteDatabase db=CRUD.conn.getReadableDatabase();
         Cursor cursor=db.rawQuery("SELECT * FROM repartidores "   ,null);
         while (cursor.moveToNext())
         {
@@ -245,33 +246,26 @@ public class recepcion_maples extends AppCompatActivity
 
 
     private  void registrar_maples(){
-         ConexionSQLiteHelper conn=new ConexionSQLiteHelper(this,"bd_usuarios",null,1);
-        SQLiteDatabase db1=conn.getReadableDatabase();
+         SQLiteDatabase db1=CRUD.conn.getReadableDatabase();
         ContentValues valor_cab=new ContentValues();
         try {
 
-            Cursor cursor1=db1.rawQuery("SELECT  case  when count(*) = 0 then 1 else max(nro_movimiento) +1  end as d FROM mov_maples   "  ,null);
-            String id= "";
-            while (cursor1.moveToNext())
-            {
-                id=cursor1.getString(0);
-            }
-            valor_cab.put("nro_movimiento",id);
-            valor_cab.put("fecha",txt_fecha.getText().toString());
+
+             valor_cab.put("fecha",txt_fecha.getText().toString());
             valor_cab.put("repartidor",id_repartidor);
             valor_cab.put("tipo_mov",contenedor_tipo_envio.tipo_envio);
             valor_cab.put("cod_cliente",id_cliente);
             valor_cab.put("sucursal",sucursal);
             valor_cab.put("ayudante",id_ayudante);
             valor_cab.put("estado","P");
-            db1.insert("mov_maples","nro_movimiento",valor_cab);
+           long cod_interno= db1.insert("mov_maples","nro_movimiento",valor_cab);
             db1.close();
 
 
             if(Integer.parseInt(txt_tipo_azul.getText().toString())>0 ){
-                SQLiteDatabase db=conn.getWritableDatabase();
+                SQLiteDatabase db=CRUD.conn.getWritableDatabase();
                 ContentValues values=new ContentValues();
-                values.put("nro_movimiento",id);
+                values.put("nro_movimiento",cod_interno);
                 values.put("tipo_m",1);
                 values.put("cantidad",txt_tipo_azul.getText().toString());
                 values.put("estado","P");
@@ -280,9 +274,9 @@ public class recepcion_maples extends AppCompatActivity
             }
 
             if(Integer.parseInt(txt_tipo_verde.getText().toString())>0 ){
-                SQLiteDatabase db=conn.getWritableDatabase();
+                SQLiteDatabase db=CRUD.conn.getWritableDatabase();
                 ContentValues values=new ContentValues();
-                values.put("nro_movimiento",id);
+                values.put("nro_movimiento",cod_interno);
                 values.put("tipo_m",2);
                 values.put("cantidad",txt_tipo_verde.getText().toString());
                 values.put("estado","P");

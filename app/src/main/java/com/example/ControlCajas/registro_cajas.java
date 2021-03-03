@@ -21,6 +21,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import Utilidades.CRUD;
 import entidades.contenedor_tipo_envio;
 import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 
@@ -36,10 +38,8 @@ import android.app.ActionBar;
 public class registro_cajas extends AppCompatActivity
 {
     TextView txt_cod_caja,txt_tipo_4,txt_tipo_5;
-    ConexionSQLiteHelper conn;
     private ProgressDialog progress;
     private ListView ListView;
-    Button cargar,registrar;
     DatePickerDialog picker;
     EditText txt_fecha;
     SearchableSpinner spinner_cliente,spinner_repartidor,spinner_ayudante;
@@ -74,7 +74,7 @@ public class registro_cajas extends AppCompatActivity
         adaptador1=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,cajas);
         ListView.setAdapter(adaptador1);
         txt_cod_caja=(TextView) findViewById(R.id.txt_cod_caja);
-        conn=new ConexionSQLiteHelper(getApplicationContext(),"bd_usuarios",null,1);
+        CRUD.conexion_sqlite(this);
         cargar_cliente();
         cargar_repartidor();
         spinner_cliente.setTitle("SELECCIONAR CLIENTE");
@@ -85,7 +85,7 @@ public class registro_cajas extends AppCompatActivity
         spinner_ayudante.setPositiveButton("CERRAR");
         txt_cod_caja.requestFocus();
         txt_fecha.setEnabled(false);
-        SQLiteDatabase db=conn.getReadableDatabase();
+        SQLiteDatabase db=CRUD.conn.getReadableDatabase();
         Cursor cursor1=db.rawQuery("SELECT date('now') as fecha",null);
         while (cursor1.moveToNext())
         {
@@ -193,30 +193,16 @@ private void agregar_fila_grilla(){
 
     String contenido_fila="";
     int registro_duplicado=0;
-    int caja_parte= Integer.parseInt( txt_cod_caja.getText().toString().substring(0,2));
 
-    if(txt_cod_caja.getText().length()==0)
+
+    if(txt_cod_caja.getText().toString().equals(""))
     {
         txt_cod_caja.requestFocus();
     }
-    else if (caja_parte!=29 && caja_parte!=31){
 
-        txt_cod_caja.setText("");
-        txt_cod_caja.requestFocus();
-    }
-
-    else {
-
-        for (int i = 0; i < ListView.getCount(); i++)
-        {
-            contenido_fila=(String) ListView.getItemAtPosition(i);
-
-            if(contenido_fila.equals(txt_cod_caja.getText().toString())){
-                registro_duplicado++;
-            }
-        }
-
-        if(registro_duplicado>0){
+    else{
+        int caja_parte= Integer.parseInt( txt_cod_caja.getText().toString().substring(0,2));
+        if (caja_parte!=29 && caja_parte!=31){
 
             txt_cod_caja.setText("");
             txt_cod_caja.requestFocus();
@@ -224,12 +210,32 @@ private void agregar_fila_grilla(){
 
         else {
 
-            cajas.add(txt_cod_caja.getText().toString());
-            adaptador1.notifyDataSetChanged();
-            txt_cod_caja.setText("");
-            contar_cartones();
+            for (int i = 0; i < ListView.getCount(); i++)
+            {
+                contenido_fila=(String) ListView.getItemAtPosition(i);
+
+                if(contenido_fila.equals(txt_cod_caja.getText().toString())){
+                    registro_duplicado++;
+                }
+            }
+
+            if(registro_duplicado>0){
+
+                txt_cod_caja.setText("");
+                txt_cod_caja.requestFocus();
+            }
+
+            else {
+
+                cajas.add(txt_cod_caja.getText().toString());
+                adaptador1.notifyDataSetChanged();
+                txt_cod_caja.setText("");
+                contar_cartones();
+            }
         }
     }
+
+
 
 
 
@@ -273,7 +279,7 @@ private void agregar_fila_grilla(){
     private  void cargar_cliente()
     {
         List<Clientes> lista_combo = new ArrayList<>();
-        SQLiteDatabase db=conn.getReadableDatabase();
+        SQLiteDatabase db=CRUD.conn.getReadableDatabase();
         Cursor cursor=db.rawQuery("SELECT * FROM clientes "   ,null);
         while (cursor.moveToNext())
         {
@@ -291,7 +297,7 @@ private void agregar_fila_grilla(){
     private  void cargar_repartidor()
     {
         List<Repartidores> lista_combo_repartidor = new ArrayList<>();
-        SQLiteDatabase db=conn.getReadableDatabase();
+        SQLiteDatabase db=CRUD.conn.getReadableDatabase();
         Cursor cursor=db.rawQuery("SELECT * FROM repartidores "   ,null);
         while (cursor.moveToNext())
         {
@@ -373,18 +379,9 @@ private void agregar_fila_grilla(){
 
     private  void registrar_cajas(){
         String clickedItem="";
-        ConexionSQLiteHelper conn=new ConexionSQLiteHelper(this,"bd_usuarios",null,1);
-        SQLiteDatabase db1=conn.getReadableDatabase();
+         SQLiteDatabase db1=CRUD.conn.getReadableDatabase();
         ContentValues valor_cab=new ContentValues();
         try {
-
-            Cursor cursor1=db1.rawQuery("SELECT  case  when count(*) = 0 then 1 else max(nro_movimiento) +1  end as d FROM movimientos  "  ,null);
-            String id= "";
-            while (cursor1.moveToNext())
-            {
-                id=cursor1.getString(0);
-            }
-            valor_cab.put("nro_movimiento",id);
             valor_cab.put("fecha",txt_fecha.getText().toString());
             valor_cab.put("repartidor",id_repartidor);
             valor_cab.put("tipo_mov",contenedor_tipo_envio.tipo_envio);
@@ -392,16 +389,16 @@ private void agregar_fila_grilla(){
             valor_cab.put("sucursal",sucursal);
             valor_cab.put("ayudante",id_ayudante);
             valor_cab.put("estado","P");
-            db1.insert("movimientos","nro_movimiento",valor_cab);
+            long cod_interno= db1.insert("movimientos","nro_movimiento",valor_cab);
             db1.close();
             for (int i = 0; i < ListView.getCount(); i++)
             {
                 clickedItem = (String) ListView.getItemAtPosition(i);
 
 
-                SQLiteDatabase db=conn.getWritableDatabase();
+                SQLiteDatabase db=CRUD.conn.getWritableDatabase();
                 ContentValues values=new ContentValues();
-                values.put("nro_movimiento",id);
+                values.put("nro_movimiento",cod_interno);
                 values.put("cod_caja",clickedItem);
                 values.put("estado","P");
                 db.insert("det_movimientos",null,values);

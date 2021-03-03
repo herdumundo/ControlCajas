@@ -20,7 +20,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import Utilidades.CRUD;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -29,12 +29,10 @@ import Utilidades.Utilidades;
 
 public class login extends AppCompatActivity
 {
-    Connection connect;
-    ConexionSQLiteHelper conn;
     Button btn_sincro,btn_login;
     TextView txt_usuario,txt_pass;
     int contador=0;
-    private ProgressDialog prodialog,progress;
+    private ProgressDialog prodialog;
     String mensaje="";
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -46,8 +44,8 @@ public class login extends AppCompatActivity
         btn_login=(Button)findViewById(R.id.btn_login);
         txt_usuario=(TextView)findViewById(R.id.txt_usuario);
         txt_pass=(TextView)findViewById(R.id.password);
-        
-        conn=new ConexionSQLiteHelper(getApplicationContext(),"bd_usuarios",null,1);
+
+        CRUD.conexion_sqlite(this);
 
         btn_sincro.setOnClickListener(new View.OnClickListener()
         {
@@ -66,9 +64,8 @@ public class login extends AppCompatActivity
 
 
                                 try {
-                                    ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
-                                    connect = conexion.Connections();
-                                    Statement stmt3 = connect.createStatement();
+                                    CRUD.connect =  CRUD.conexion.Connections();
+                                    Statement stmt3 = CRUD.connect.createStatement();
                                     ResultSet rs3 = stmt3.executeQuery("select count(*) as contador  from  usuarios");
                                     while (rs3.next())
                                     {
@@ -166,18 +163,16 @@ public class login extends AppCompatActivity
             Integer id;
             int c =0;
             String usuario="";String pass="";
-            conn=new ConexionSQLiteHelper(getApplicationContext(),"bd_usuarios",null,1);
-            SQLiteDatabase db=conn.getReadableDatabase();
+             SQLiteDatabase db=CRUD.conn.getReadableDatabase();
 
-            SQLiteDatabase db1=conn.getReadableDatabase();
+            SQLiteDatabase db1=CRUD.conn.getReadableDatabase();
             String strSQL = "delete from usuarios";
             db1.execSQL(strSQL);
             //db1.close();
 
-            ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
-            connect = conexion.Connections();
+            CRUD.connect = CRUD.conexion.Connections();
             String query = "select *  from  usuarios";
-            Statement stmt = connect.createStatement();
+            Statement stmt = CRUD.connect.createStatement();
             ResultSet rs = stmt.executeQuery(query);
             while ( rs.next())
             {
@@ -205,7 +200,7 @@ public class login extends AppCompatActivity
 
     private void login ()
     {
-        SQLiteDatabase db=conn.getReadableDatabase();
+        SQLiteDatabase db=CRUD.conn.getReadableDatabase();
         String respuesta="0";
 
         Cursor cursor=db.rawQuery("SELECT * FROM  usuarios where usuario='"+txt_usuario.getText().toString().trim()+"' and password='"+txt_pass.getText()+"'" ,null);

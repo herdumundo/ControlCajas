@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import entidades.contenedor_tipo_envio;
+import Utilidades.CRUD;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -33,8 +34,6 @@ import Utilidades.Utilidades;
 public class MainActivity extends AppCompatActivity
 {
     private ProgressDialog prodialog;
-    Connection connect;
-    ConexionSQLiteHelper conn;
     Button btn_movimiento,btn_sincro;
     int contador=0;
     String mensaje_sincro="";
@@ -45,7 +44,24 @@ public class MainActivity extends AppCompatActivity
     private volatile boolean flag = true;
     private volatile boolean bandera_hilo_pendiente = true;
     int contador_maples_cajas=0;
-
+    public void onBackPressed() {
+        new AlertDialog.Builder(this)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setTitle("ATENCION!!!.")
+                .setMessage("DESEA CERRAR SESION.")
+                .setPositiveButton("SI", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        Intent intent = new Intent(getApplicationContext(), login.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                    }
+                })
+                .setNegativeButton("NO", null)
+                .show();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,15 +71,11 @@ public class MainActivity extends AppCompatActivity
         btn_sincro= (Button)findViewById(R.id.btnSincro) ;
         txt_estado_conexion=(TextView)findViewById(R.id.txt_estado);
         txt_total_pendientes=(TextView)findViewById(R.id.txt_total_pendientes);
-        conn=new ConexionSQLiteHelper(getApplicationContext(),"bd_usuarios",null,1);
-
-
+        CRUD.conexion_sqlite(this);
         final MyThread_pendientes thread_pendientes = new MyThread_pendientes();
         thread_pendientes.start();
-
         final MyThread thread = new MyThread();
         thread.start();
-
 
          btn_sincro.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,9 +90,8 @@ public class MainActivity extends AppCompatActivity
                             public void onClick(DialogInterface dialog, int which)
                             {
                                 try {
-                                    ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
-                                    connect = conexion.Connections();
-                                    Statement stmt3 = connect.createStatement();
+                                    CRUD.connect = CRUD.conexion.Connections();
+                                    Statement stmt3 = CRUD.connect.createStatement();
                                     ResultSet rs3 = stmt3.executeQuery("select count(*) as contador  from  repartidores with(nolock)");
                                     while (rs3.next())
                                     {
@@ -127,54 +138,50 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-
-    public void ir_registro_cajas(View view) {
+    public  void ir_registro_cajas(View view) {
         contenedor_tipo_envio.nombre_envio="DEVOLUCIONES DE CAJAS";
         contenedor_tipo_envio.tipo_envio=2;
         flag=false;
         Intent i=new Intent(this, registro_cajas.class);
         startActivity(i);
     }
-    public void ir_registro_cajas_salida(View view) {
+    public  void ir_registro_cajas_salida(View view) {
         contenedor_tipo_envio.nombre_envio="ENVIO DE CAJAS";
         contenedor_tipo_envio.tipo_envio=1;
         flag=false;
         Intent i=new Intent(this, registro_cajas.class);
         startActivity(i);
     }
-
-    public void ir_registro_clientes(View view) {
+    public  void ir_registro_clientes(View view) {
         flag=false;
         Intent i=new Intent(this, clientes.class);
         startActivity(i);
     }
-    public void ir_registro_repartidor(View view) {
+    public  void ir_registro_repartidor(View view) {
         flag=false;
         Intent i=new Intent(this, registrar_repartidor.class);
         startActivity(i);
     }
-    public void ir_informe_menu(View view) {
+    public  void ir_informe_menu(View view) {
         flag=false;
         Intent i=new Intent(this, informe_menu.class);
         startActivity(i);
     }
-    public void ir_registro_maples(View view) {
+    public  void ir_registro_maples(View view) {
         contenedor_tipo_envio.nombre_envio="DEVOLUCIONES DE MAPLES";
         contenedor_tipo_envio.tipo_envio=2;
         flag=false;
         Intent i=new Intent(this, recepcion_maples.class);
         startActivity(i);
     }
-
-    public void ir_registro_maples_salida(View view) {
+    public  void ir_registro_maples_salida(View view) {
         contenedor_tipo_envio.nombre_envio="ENVIO DE MAPLES";
         contenedor_tipo_envio.tipo_envio=1;
         flag=false;
         Intent i=new Intent(this, recepcion_maples.class);
         startActivity(i);
     }
-
-    public void exportar_datos(View view) {
+    public  void exportar_datos(View view) {
         conexion c = new conexion();
 
 
@@ -189,7 +196,7 @@ public class MainActivity extends AppCompatActivity
                     {
 
                         try {
-                            SQLiteDatabase db=conn.getReadableDatabase();
+                            SQLiteDatabase db=CRUD.conn.getReadableDatabase();
                             Cursor cursor=db.rawQuery("select count(*) from (SELECT   nro_movimiento   FROM movimientos   where   estado ='P'" +
                                     " union all SELECT   nro_movimiento   FROM mov_maples   where   estado ='P' " +
                                     "union all SELECT   cod_cliente   FROM clientes    where   estado ='A' " +
@@ -240,40 +247,30 @@ public class MainActivity extends AppCompatActivity
 
 
     }
-
     private void exportar_cajas_movimiento(){
     try {
         contador_maples_cajas=0;
-        SQLiteDatabase db=conn.getReadableDatabase();
-        SQLiteDatabase db_detalle=conn.getReadableDatabase();
-        ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
-        connect = conexion.Connections();
-        Cursor cursor=db.rawQuery("SELECT fecha,repartidor,tipo_mov,cod_cliente,sucursal,ayudante,nro_movimiento " +
-        "FROM movimientos where estado='P'" ,null);
-        String fecha,repartidor,tipo_mov,cod_cliente,sucursal,ayudante,nro_movimiento;
-        while (cursor.moveToNext())
+        SQLiteDatabase db=CRUD.conn.getReadableDatabase();
+        SQLiteDatabase db_detalle=CRUD.conn.getReadableDatabase();
+         CRUD.connect = CRUD.conexion.Connections();
+        Cursor cursor=db.rawQuery("SELECT fecha,repartidor,tipo_mov,cod_cliente,sucursal,ayudante,nro_movimiento  FROM movimientos where estado='P'" ,null);
+         while (cursor.moveToNext())
         {
             int res_final_trans=1;
             int res_trans=0;
             int id_cab=0;
             int id_cab_cursor=0;
-            connect.setAutoCommit(false);
+            CRUD.connect.setAutoCommit(false);
 
-            fecha=cursor.getString(0);
-            repartidor=cursor.getString(1);
-            tipo_mov=cursor.getString(2);
-            cod_cliente=cursor.getString(3);
-            sucursal=cursor.getString(4);
-            ayudante=cursor.getString(5);
             id_cab_cursor=cursor.getInt(6);
             CallableStatement callableStatement=null;
-            callableStatement = connect.prepareCall("{call pa_alta_exportar_cajas( ?,?,?,?,?,?,?,? )}");
-            callableStatement .setString("@fecha_t",fecha);
-            callableStatement .setInt("@repartidor",Integer.parseInt(repartidor));
-            callableStatement .setInt("@tipo_mov", Integer.parseInt(tipo_mov));
-            callableStatement .setString("@cod_cliente",  cod_cliente );
-            callableStatement .setString("@sucursal", sucursal);
-            callableStatement .setInt("@ayudante",Integer.parseInt(ayudante) );
+            callableStatement = CRUD.connect.prepareCall("{call pa_alta_exportar_cajas( ?,?,?,?,?,?,?,? )}");
+            callableStatement .setString("@fecha_t",cursor.getString(0));
+            callableStatement .setInt("@repartidor",cursor.getInt(1));
+            callableStatement .setInt("@tipo_mov", cursor.getInt(2));
+            callableStatement .setString("@cod_cliente", cursor.getString(3) );
+            callableStatement .setString("@sucursal", cursor.getString(4));
+            callableStatement .setInt("@ayudante",cursor.getInt(5) );
             callableStatement .setInt("@mensaje",0);
             callableStatement .setInt("@out_nro_movimiento",0);
             callableStatement.registerOutParameter("@mensaje", Types.INTEGER);
@@ -285,13 +282,12 @@ public class MainActivity extends AppCompatActivity
 
             if(res_trans==1)
             {
-                Cursor cursor_detalle=db_detalle.rawQuery("SELECT cod_caja " +
-                        "FROM det_movimientos where  nro_movimiento="+id_cab_cursor+"" ,null);
+                Cursor cursor_detalle=db_detalle.rawQuery("SELECT cod_caja  FROM det_movimientos where  nro_movimiento="+id_cab_cursor+"" ,null);
                 while (cursor_detalle.moveToNext())
                 {
                     int cod_caja= (cursor_detalle.getInt(0));
                     CallableStatement call_det=null;
-                    call_det = connect.prepareCall("{call pa_alta_exportar_cajas_det( ?, ?,?  )}");
+                    call_det = CRUD.connect.prepareCall("{call pa_alta_exportar_cajas_det( ?, ?,?  )}");
                     call_det .setInt("@nro_movimiento",id_cab);
                     call_det .setInt("@cod_barra",cod_caja);
                     call_det.registerOutParameter("@mensaje", Types.INTEGER);
@@ -302,18 +298,18 @@ public class MainActivity extends AppCompatActivity
                 cursor_detalle.close();
                 if(res_final_trans==1)
                 {
-                    connect.commit();
-                    SQLiteDatabase db_upd_cab=conn.getReadableDatabase();
-                    SQLiteDatabase db_upd_det=conn.getReadableDatabase();
+                    CRUD.connect.commit();
+                    SQLiteDatabase db_upd_cab=CRUD.conn.getReadableDatabase();
+                    SQLiteDatabase db_upd_det=CRUD.conn.getReadableDatabase();
                     db_upd_cab.execSQL("UPDATE movimientos SET estado='C' WHERE nro_movimiento='"+id_cab_cursor+"'");
                     db_upd_det.execSQL("UPDATE det_movimientos SET estado='C' WHERE nro_movimiento='"+id_cab_cursor+"'");
                 }
                 else {
-                    connect.rollback();
+                    CRUD.connect.rollback();
                 }
              }
            else {
-                connect.rollback();
+                CRUD.connect.rollback();
                 }
             contador_maples_cajas++;
             prodialog.setProgress(contador_maples_cajas);
@@ -332,8 +328,7 @@ public class MainActivity extends AppCompatActivity
     mensaje=e.toString()+" ERROR AL EXPORTAR REGISTROS DE CAJAS. ";
     }
         }
-
-    private  void test_conexion(){
+    private void test_conexion(){
         conexion c = new conexion();
 
         if(c.getConexion()!=null){
@@ -354,13 +349,11 @@ public class MainActivity extends AppCompatActivity
         }
 
     }
-
     private void pendientes_envio() {
         // int c=0;
         try {
-             SQLiteDatabase db=conn.getReadableDatabase();
-            ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
-            connect = conexion.Connections();
+             SQLiteDatabase db=CRUD.conn.getReadableDatabase();
+            CRUD.connect = CRUD.conexion.Connections();
 
             Cursor cursor=db.rawQuery("select count(*) from (SELECT   nro_movimiento   FROM movimientos   where   estado ='P'" +
                     " union all SELECT   nro_movimiento   FROM mov_maples   where   estado ='P' " +
@@ -374,19 +367,18 @@ public class MainActivity extends AppCompatActivity
         {
         }
     }
-
     private void sincroniza_repartidores() {
         try
-        {  ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
-            connect = conexion.Connections();
+        {
+            CRUD.connect = CRUD.conexion.Connections();
 
-            SQLiteDatabase db1=conn.getReadableDatabase();
+            SQLiteDatabase db1=CRUD.conn.getReadableDatabase();
             String strSQL = "delete from repartidores where estado='C'";
             db1.execSQL(strSQL);
              db1.close();
 
-            SQLiteDatabase db=conn.getReadableDatabase();
-            Statement stmt = connect.createStatement();
+            SQLiteDatabase db=CRUD.conn.getReadableDatabase();
+            Statement stmt = CRUD.connect.createStatement();
             ResultSet rs = stmt.executeQuery("select * from  repartidores ");
             int c=0;
             while (rs.next())
@@ -404,7 +396,7 @@ public class MainActivity extends AppCompatActivity
             rs.close();
             db1.close();
             db.close();
-            connect.close();
+            CRUD. connect.close();
             mensaje="REPARTIDORES SINCRONIZADOS.";
 
         }
@@ -413,19 +405,17 @@ public class MainActivity extends AppCompatActivity
         mensaje=e.toString();
         }
     }
-
     private void sincronizar_cliente() {
         try
         {
             int c=0;
             Integer id; String cliente="";String ruc="";
-            SQLiteDatabase db=conn.getReadableDatabase();
-            SQLiteDatabase db1=conn.getReadableDatabase();
+            SQLiteDatabase db=CRUD.conn.getReadableDatabase();
+            SQLiteDatabase db1=CRUD.conn.getReadableDatabase();
             db1.execSQL("delete from clientes where estado='C'");
-            ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
-            connect = conexion.Connections();
+            CRUD.connect = CRUD.conexion.Connections();
             String query = "select cod_cliente,razon_social,isnull(ruc,'') as ruc  from  clientes  with(nolock)";
-            Statement stmt = connect.createStatement();
+            Statement stmt = CRUD.connect.createStatement();
             ResultSet rs = stmt.executeQuery(query);
             while ( rs.next())
             {
@@ -498,8 +488,6 @@ public class MainActivity extends AppCompatActivity
                 else {
                     mensaje="ERROR AL INTENTAR CONECTARSE AL SERVIDOR, FAVOR VERIFIQUE WIFI.";
                 }
-
-
                 runOnUiThread(new Runnable()
                 {
                     @Override
@@ -512,8 +500,6 @@ public class MainActivity extends AppCompatActivity
                                 .setTitle("DETALLE")
                                 .setMessage(mensaje)
                                 .setNegativeButton("CERRAR", null).show();
-
-
                     }
                 });
             }
@@ -540,9 +526,8 @@ public class MainActivity extends AppCompatActivity
 
                             prodialog.dismiss();
                             try {
-                                ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
-                                connect = conexion.Connections();
-                                Statement stmt3 = connect.createStatement();
+                                CRUD.connect = CRUD.conexion.Connections();
+                                Statement stmt3 = CRUD.connect.createStatement();
                                 ResultSet rs3 = stmt3.executeQuery("select count(*) as contador  from  clientes");
                                 while (rs3.next())
                                 {
@@ -656,32 +641,12 @@ public class MainActivity extends AppCompatActivity
 
 
 
-    public void onBackPressed() {
-        new AlertDialog.Builder(this)
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setTitle("ATENCION!!!.")
-                .setMessage("DESEA CERRAR SESION.")
-                .setPositiveButton("SI", new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        Intent intent = new Intent(getApplicationContext(), login.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                    }
-                })
-                .setNegativeButton("NO", null)
-                .show();
-    }
+
     private void exportar_maples(){
         try {
-
-
-            SQLiteDatabase db=conn.getReadableDatabase();
-            SQLiteDatabase db_detalle=conn.getReadableDatabase();
-            ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
-            connect = conexion.Connections();
+            SQLiteDatabase db=CRUD.conn.getReadableDatabase();
+            SQLiteDatabase db_detalle=CRUD.conn.getReadableDatabase();
+            CRUD.connect = CRUD.conexion.Connections();
 
             Cursor cursor=db.rawQuery("SELECT fecha,repartidor,tipo_mov,cod_cliente,sucursal,ayudante,nro_movimiento " +
                     "FROM mov_maples where estado='P'" ,null);
@@ -692,7 +657,7 @@ public class MainActivity extends AppCompatActivity
                 int res_trans=0;
                 int id_cab=0;
                 int id_cab_cursor=0;
-                connect.setAutoCommit(false);
+                CRUD.connect.setAutoCommit(false);
 
                 fecha=cursor.getString(0);
                 repartidor=cursor.getString(1);
@@ -702,7 +667,7 @@ public class MainActivity extends AppCompatActivity
                 ayudante=cursor.getString(5);
                 id_cab_cursor=cursor.getInt(6);
                 CallableStatement callableStatement=null;
-                callableStatement = connect.prepareCall("{call pa_alta_exportar_maples( ?,?,?,?,?,?,?,? )}");
+                callableStatement = CRUD.connect.prepareCall("{call pa_alta_exportar_maples( ?,?,?,?,?,?,?,? )}");
                 callableStatement .setString("@fecha_t",fecha);
                 callableStatement .setInt("@repartidor",Integer.parseInt(repartidor));
                 callableStatement .setInt("@tipo_mov", Integer.parseInt(tipo_mov));
@@ -727,7 +692,7 @@ public class MainActivity extends AppCompatActivity
                         int tipo_m= (cursor_detalle.getInt(0));
                         int cantidad= (cursor_detalle.getInt(1));
                         CallableStatement call_det=null;
-                        call_det = connect.prepareCall("{call pa_alta_exportar_maples_det( ?, ?,?,?  )}");
+                        call_det = CRUD.connect.prepareCall("{call pa_alta_exportar_maples_det( ?, ?,?,?  )}");
                         call_det .setInt("@nro_movimiento",id_cab);
                         call_det .setInt("@tipo_m",tipo_m);
                         call_det .setInt("@cantidad",cantidad);
@@ -739,18 +704,18 @@ public class MainActivity extends AppCompatActivity
                     cursor_detalle.close();
                     if(res_final_trans==1)
                     {
-                        connect.commit();
-                        SQLiteDatabase db_upd_cab=conn.getReadableDatabase();
-                        SQLiteDatabase db_upd_det=conn.getReadableDatabase();
+                        CRUD.connect.commit();
+                        SQLiteDatabase db_upd_cab=CRUD.conn.getReadableDatabase();
+                        SQLiteDatabase db_upd_det=CRUD.conn.getReadableDatabase();
                         db_upd_cab.execSQL("UPDATE mov_maples SET estado='C' WHERE nro_movimiento='"+id_cab_cursor+"'");
                         db_upd_det.execSQL("UPDATE det_mov_maples SET estado='C' WHERE nro_movimiento='"+id_cab_cursor+"'");
                     }
                     else {
-                        connect.rollback();
+                        CRUD.connect.rollback();
                     }
                 }
                 else {
-                    connect.rollback();
+                    CRUD.connect.rollback();
                 }
                 contador_maples_cajas++;
                 prodialog.setProgress(contador_maples_cajas);
@@ -771,21 +736,19 @@ public class MainActivity extends AppCompatActivity
         try {
 
 
-            SQLiteDatabase db=conn.getReadableDatabase();
-             ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
-            connect = conexion.Connections();
-            Cursor cursor=db.rawQuery("SELECT cod_cliente , razon_social  , ruc " +
-                    "FROM clientes where estado='A'" ,null);
+            SQLiteDatabase db=CRUD.conn.getReadableDatabase();
+            CRUD.connect = CRUD.conexion.Connections();
+            Cursor cursor=db.rawQuery("SELECT cod_cliente , razon_social  , ruc    FROM clientes where estado='A'" ,null);
 
 
             while (cursor.moveToNext())
             {
                 int res_trans=0;
-                connect.setAutoCommit(false);
+                CRUD.connect.setAutoCommit(false);
 
 
                 CallableStatement callableStatement=null;
-                callableStatement = connect.prepareCall("{call pa_alta_exportar_clientes_sqlite( ?,?,?,?  )}");
+                callableStatement = CRUD.connect.prepareCall("{call pa_alta_exportar_clientes_sqlite( ?,?,?,?  )}");
                 callableStatement .setInt("@cod_cliente",cursor.getInt(0));
                 callableStatement .setString("@razon",cursor.getString(1));
                 callableStatement .setString("@ruc", cursor.getString(2));
@@ -796,9 +759,9 @@ public class MainActivity extends AppCompatActivity
                 res_trans = callableStatement.getInt("@mensaje");
 
                 if(res_trans==1){
-                    connect.commit();
+                    CRUD.connect.commit();
 
-                    SQLiteDatabase db_upd_cliente=conn.getReadableDatabase();
+                    SQLiteDatabase db_upd_cliente=CRUD.conn.getReadableDatabase();
                     db_upd_cliente.execSQL("UPDATE clientes SET estado='C' WHERE cod_cliente='"+cursor.getInt(0)+"'");
                 }
                 contador_maples_cajas++;
@@ -818,28 +781,23 @@ public class MainActivity extends AppCompatActivity
             mensaje=e.toString()+" ERROR EXPORTANDO CLIENTES";
         }
     }
-
-
-
     private void exportar_repartidores_creados(){
         try {
 
 
-            SQLiteDatabase db=conn.getReadableDatabase();
-            ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
-            connect = conexion.Connections();
-            Cursor cursor=db.rawQuery("SELECT cod_repartidor , repartidor " +
-                    "FROM repartidores where estado='A'" ,null);
+            SQLiteDatabase db=CRUD.conn.getReadableDatabase();
+            CRUD.connect = CRUD.conexion.Connections();
+            Cursor cursor=db.rawQuery("SELECT cod_repartidor , repartidor  FROM repartidores where estado='A'" ,null);
 
 
             while (cursor.moveToNext())
             {
                 int res_trans=0;
-                connect.setAutoCommit(false);
+                CRUD.connect.setAutoCommit(false);
 
 
                 CallableStatement callableStatement=null;
-                callableStatement = connect.prepareCall("{call pa_alta_exportar_repartidor_sqlite( ?,?,?  )}");
+                callableStatement = CRUD.connect.prepareCall("{call pa_alta_exportar_repartidor_sqlite( ?,?,?  )}");
                 callableStatement .setInt("@cod_repartidor",cursor.getInt(0));
                 callableStatement .setString("@nombre",cursor.getString(1));
                  callableStatement .setInt("@mensaje",0);
@@ -849,9 +807,9 @@ public class MainActivity extends AppCompatActivity
                 res_trans = callableStatement.getInt("@mensaje");
 
                 if(res_trans==1){
-                    connect.commit();
+                    CRUD.connect.commit();
 
-                    SQLiteDatabase db_upd_cliente=conn.getReadableDatabase();
+                    SQLiteDatabase db_upd_cliente=CRUD.conn.getReadableDatabase();
                     db_upd_cliente.execSQL("UPDATE repartidores SET estado='C' WHERE cod_repartidor='"+cursor.getInt(0)+"'");
                 }
                 contador_maples_cajas++;
